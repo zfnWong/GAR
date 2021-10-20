@@ -13,6 +13,6 @@ to construct *PGE* for your dataset.
 
    - GCGAN-MLP:
    
-      ```python3 main.py --gpu_id 2 --dataset XING --embed_meth node2vec --agg_meth none --gan_model dotrsgan --real_lys [200,200] --real_act tanh --sim_coe 0.1 --cold_test 0```
+      ```python3 main.py --gpu_id 0 --dataset CiteULike --embed_meth node2vec --agg_meth none --gan_model dotrsgan --real_lys [200,200] --real_act tanh --sim_coe 0.1 --cold_test 0```
 
    

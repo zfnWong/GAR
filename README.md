@@ -6,7 +6,7 @@ This is the official code for GCGAN.
 `python3 plainagg.py --dataset CiteULike --emb node2vec` 
 to construct *PGE* for your dataset.
 
-2. Go to the `GCGAN` package and run GCGAN and GCGAN-MLP
+2. Go to the `GCGAN` package and run *GCGAN* and *GCGAN-MLP*
    - GCGAN:
    
       ```python3 main.py --gpu_id 0 --dataset CiteULike --embed_meth node2vec --gan_model gcrsgan --sim_coe 0.05 --alpha 0.9```

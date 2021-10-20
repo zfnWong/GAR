@@ -1,5 +1,5 @@
 # GCGAN
-This is the official code for GCGAN.
+This is the official code of GCGAN.
 
 ## Usage
 1. Go to the `PGE` package and use 

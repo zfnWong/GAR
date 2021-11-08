@@ -82,7 +82,7 @@ def build_generator(condition, hid_dims, act, drop_rate, training, reuse):
     return tf.stack([gen_emb_0, gen_emb_1, gen_emb_2], axis=1)
 
 
-class GCRSGAN(object):
+class GARGNN(object):
     def __init__(self, sess, args, emb_dim, content_dim):
         self.sess = sess
         self.emb_dim = emb_dim

@@ -14,8 +14,8 @@ import pandas as pd
 from pprint import pprint
 import random
 import scipy.sparse as sp
-from dot_rsgan import DOTRSGAN
-from gc_rsgan import GCRSGAN
+from gar_mlp import GARMLP
+from gar_gnn import GARGNN
 
 
 def set_seed_tf(seed):
@@ -42,7 +42,7 @@ parser.add_argument('--test_batch_us', type=int, default=100)
 parser.add_argument('--n_jobs', type=int, default=4, help='Multiprocessing number.')
 
 parser.add_argument('--agg_meth', type=str, default='plain', choices=['plain', 'rec', 'none'])
-parser.add_argument('--gan_model', type=str, default='gcrsgan')
+parser.add_argument('--gan_model', type=str, default='gargnn')
 parser.add_argument('--val_interval', type=int, default=20)
 parser.add_argument('--patience', type=int, default=20, help='Early stop patience.')
 parser.add_argument('--gan_epoch', type=int, default=10000)

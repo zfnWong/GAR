@@ -51,7 +51,7 @@ def build_generator(condition, hid_dims, act, drop_rate, training, reuse):
     return gen_emb_0
 
 
-class DOTRSGAN(object):
+class GARMLP(object):
     def __init__(self, sess, args, emb_dim, content_dim):
         self.sess = sess
         self.emb_dim = emb_dim

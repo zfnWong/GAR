@@ -8,7 +8,7 @@ def build_mlp(mlp_in, hidden_dims, act, drop_rate, is_training, scope_name, bn_f
         if bn_first:
             hidden = tf.layers.batch_normalization(hidden,
                                                    training=is_training,
-                                                   scale=False,  # 因为后面接了线性层，所以取消放缩
+                                                   scale=False,
                                                    name='mlp_bn_1')
         hidden = tf.layers.dense(hidden,
                                  hidden_dims[0],
@@ -18,7 +18,7 @@ def build_mlp(mlp_in, hidden_dims, act, drop_rate, is_training, scope_name, bn_f
                                  kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
         for i in range(2, len(hidden_dims) + 1):
             if act == 'relu':
-                hidden = tf.nn.leaky_relu(hidden, alpha=0.01)  # relu 适合放在 bn 前面
+                hidden = tf.nn.leaky_relu(hidden, alpha=0.01)
             hidden = tf.layers.batch_normalization(hidden,
                                                    training=is_training,
                                                    name='mlp_bn_' + str(i))
@@ -26,7 +26,7 @@ def build_mlp(mlp_in, hidden_dims, act, drop_rate, is_training, scope_name, bn_f
                 hidden = tf.nn.tanh(hidden)
             hidden = tf.layers.dropout(hidden, rate=drop_rate, training=is_training, name='mlp_drop_' + str(i))
             hidden = tf.layers.dense(hidden,
-                                     hidden_dims[i - 1],  # 最后一层不一定要是 1
+                                     hidden_dims[i - 1],
                                      # kernel_initializer=tf.truncated_normal_initializer(0.02),
                                      kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3),
                                      kernel_initializer=tf.glorot_uniform_initializer(),
@@ -70,7 +70,6 @@ class GARMLP(object):
         )
 
         # D loss
-        # 必须将 uemb 和 iemb 同批输入，分批（pos，neg）不能正常训练，可能是 bn 的缘故
         uemb = tf.tile(self.opp_emb, [3, 1])
         iemb = tf.concat([self.real_emb, self.neg_emb, self.gen_emb], axis=0)
         D_out = build_discriminator(uemb, iemb,

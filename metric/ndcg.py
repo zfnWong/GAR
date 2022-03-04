@@ -30,7 +30,7 @@ def test(get_topk, get_user_rating, ts_nei, ts_user, item_array, pos_dict=None, 
     :param ts_user:
     :param item_array:
     :param pos_dict:
-    :param masked_items: mask 掉所有 user 与固定的一些 item 计算的 scores
+    :param masked_items:
     :param showbar:
     :param val:
     :return:
@@ -53,7 +53,6 @@ def test(get_topk, get_user_rating, ts_nei, ts_user, item_array, pos_dict=None, 
 
         # ================== exclude =======================
         def get_exclude_pair(u_pair):
-            # 找出 user 在全集但不在当前测试集中的 item
             pos_item = np.array(list(set(pos_dict[u_pair[0]]) - set(ts_nei[u_pair[0]])), dtype=np.int64)
             pos_user = np.array([u_pair[1]] * len(pos_item), dtype=np.int64)
             return np.stack([pos_user, pos_item], axis=1)
@@ -62,7 +61,7 @@ def test(get_topk, get_user_rating, ts_nei, ts_user, item_array, pos_dict=None, 
         batch_u_pair = tuple(zip(batch_user.tolist(), batch_range))  # (org_id, map_id)
         exclude_pair = list(map(get_exclude_pair, batch_u_pair))
         exclude_pair = np.concatenate(exclude_pair, axis=0)
-        rating_all_item[exclude_pair[:, 0], exclude_pair[:, 1]] = -1e10  # 不能直接用 warm_item 原因在这
+        rating_all_item[exclude_pair[:, 0], exclude_pair[:, 1]] = -1e10
         if masked_items is not None:
             rating_all_item[:, masked_items] = -1e10
         # ===================================================
@@ -101,7 +100,7 @@ def test_pt(get_user_rating, ts_nei, ts_user, item_array, pos_dict=None, masked_
     :param ts_user:
     :param item_array:
     :param pos_dict:
-    :param masked_items: mask 掉所有 user 与固定的一些 item 计算的 scores
+    :param masked_items:
     :param showbar:
     :param val:
     :return:
@@ -126,7 +125,6 @@ def test_pt(get_user_rating, ts_nei, ts_user, item_array, pos_dict=None, masked_
 
         # ================== exclude =======================
         def get_exclude_pair(u_pair):
-            # 找出 user 在全集但不在当前测试集中的 item
             pos_item = np.array(list(set(pos_dict[u_pair[0]]) - set(ts_nei[u_pair[0]])), dtype=np.int64)
             pos_user = np.array([u_pair[1]] * len(pos_item), dtype=np.int64)
             return np.stack([pos_user, pos_item], axis=1)
@@ -135,7 +133,7 @@ def test_pt(get_user_rating, ts_nei, ts_user, item_array, pos_dict=None, masked_
         batch_u_pair = tuple(zip(batch_user.tolist(), batch_range))  # (org_id, map_id)
         exclude_pair = list(map(get_exclude_pair, batch_u_pair))
         exclude_pair = np.concatenate(exclude_pair, axis=0)
-        rating_all_item[exclude_pair[:, 0], exclude_pair[:, 1]] = -1e10  # 不能直接用 warm_item 原因在这
+        rating_all_item[exclude_pair[:, 0], exclude_pair[:, 1]] = -1e10
         if masked_items is not None:
             rating_all_item[:, masked_items] = -1e10
         # ===================================================
@@ -147,7 +145,7 @@ def test_pt(get_user_rating, ts_nei, ts_user, item_array, pos_dict=None, masked_
             aucs = list(map(AUC, batch_gt_pair))
         auc_record.extend(aucs)
         if not val:
-            top_k_res = torch.topk(rating_all_item, k=max_K, out=top_k_res)  # 排过序的
+            top_k_res = torch.topk(rating_all_item, k=max_K, out=top_k_res)
             rating_list.append(top_k_res[1].cpu().data.numpy())
             groundTrue_list.append(groundTrue)
 

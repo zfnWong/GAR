@@ -80,7 +80,6 @@ pprint(vars(args))
 timer = utils.Timer(name='main')
 ndcg.init(args)
 train_data = pd.read_csv(args.datadir + args.dataset + '/warm_map.csv', dtype=np.int64).values
-# 保证每一个 batch 一样大小，舍去最后一个不完整的 batch
 train_batch = [(begin, min(begin + args.batch_size, len(train_data)))
                for begin in range(0, len(train_data) - args.batch_size, args.batch_size)]
 content_data = np.load(args.datadir + args.dataset + '/item_content.npy')
@@ -98,7 +97,6 @@ save_file += param_file
 args.param_file = param_file
 timer.toc().tic().logging('Model will be stored in ' + save_file)
 
-# 训练数据准备
 t0 = time.time()
 emb_path = ""
 if args.agg_meth == 'plain':
@@ -125,11 +123,10 @@ val_time = 0
 stop_flag = 0
 batch_count = 0
 
-# 模型设置
 config = tf.ConfigProto()
-config.gpu_options.allow_growth = True  # 设置tf模式为按需赠长模式
+config.gpu_options.allow_growth = True
 sess = tf.Session(config=config)
-gan = eval(args.gan_model)(sess, args, emb.shape[-1], content_data.shape[-1])  # 自适应 GAN 模型
+gan = eval(args.gan_model)(sess, args, emb.shape[-1], content_data.shape[-1])
 saver = tf.train.Saver()
 d_loss, g_loss = [], []
 timer.toc().tic().logging("Training GAN model...")
@@ -141,7 +138,6 @@ for epoch in range(1, args.gan_epoch + 1):
     neg_train_data = np.random.choice(para_dict['warm_item'], size=(len(train_data), 1), replace=True)
     pair_train_data = np.concatenate([train_data, neg_train_data], axis=1)
 
-    # 交替训练一个 batch
     for beg, end in train_batch:
         batch_count += 1
         t_train_begin = time.time()
@@ -220,8 +216,7 @@ for epoch in range(1, args.gan_epoch + 1):
         break
 timer.toc().tic().logging("Finish training GAN model.")
 
-# 保存训练过程
-if args.gan_epoch > 0:  # 如果有 train 的过程
+if args.gan_epoch > 0:
     train_file = './train/'
     if not os.path.exists(train_file):
         os.makedirs(train_file)
@@ -231,7 +226,6 @@ if args.gan_epoch > 0:  # 如果有 train 的过程
                       columns=['model', 'epoch', 'num_val', 'tr_time', 'val_time', 'auc', 'pre', 'rec', 'ndcg'])
     df.to_csv(plot_file_name, index=False)
 
-# 测试结果
 saver.restore(sess, save_file)
 print('#' * 30, args.dataset, args.embed_meth, args.gan_model, args.agg_meth, args.samp_size, '#' * 30)
 # cold recommendation
@@ -275,8 +269,7 @@ hybrid_res = ndcg.test(gan.get_ranked_rating,
 timer.toc().tic().logging("Hybrid recommendation result@{}: AUC, PRE, REC, NDCG: {:.4f}, {:.4f}, {:.4f}, {:.4f}".format(
     args.Ks[0], hybrid_res['auc'], hybrid_res['precision'][0], hybrid_res['recall'][0], hybrid_res['ndcg'][0]))
 
-# 保存测试结果
-sess.close()  # 关闭 session
+sess.close()
 result_file = './result/'
 if not os.path.exists(result_file):
     os.makedirs(result_file)

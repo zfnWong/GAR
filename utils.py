@@ -32,7 +32,7 @@ def df_get_neighbors(input_df, obj, max_num):
     keys = np.array(keys, dtype=np.int64)
     opp_obj = 'item' if obj == 'user' else 'user'
     values = list(map(lambda x: x[opp_obj].values, values))
-    values.append(0)  # 防止成为一个 object 类型的二维 array
+    values.append(0)
     values = np.array(values, dtype=np.object)
 
     nei_array = np.zeros((max_num, ), dtype=np.object)
@@ -41,7 +41,6 @@ def df_get_neighbors(input_df, obj, max_num):
 
 
 def neighbor_to_neighbor(begin_array, end_array):
-    """默认 id 都是从 0 开始重新编排的"""
     two_hop_nei_array = []
     for i, neighbors in tqdm(enumerate(begin_array)):
         if hasattr(neighbors, 'shape'):
@@ -62,11 +61,6 @@ class Timer(object):
         self.run_time = 0.0
 
     def logging(self, message):
-        """
-        输出当前的运行时间信息, 包括当前日期, 时刻, 过程已运行时间, 运行信息
-        参数:
-            message - 运行信息
-        """
         current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         message = '' if message is None else message
         print("{} {} {:.0f}s | {}".format(current_time,
@@ -85,9 +79,6 @@ class Timer(object):
 
 def bpr_neg_samp(uni_users, support_dict, item_array, neg_rate):
     """
-    以 user 为单位的训练样本采样方法
-    无论是 pointwise，pairwise 还是 listwise，采样都是围绕 user 进行的
-    pairwise 里的负采样，也是针对一个 user 采若干负样本，只不过将负样本都与同个正样本配对
     param:
         uni_users - user array in training data
         dict - {uid: array[items]}
@@ -116,7 +107,6 @@ def bpr_neg_samp(uni_users, support_dict, item_array, neg_rate):
 
 def negative_sampling(pos_user_array, pos_item_array, neg, warm_item):
     """
-    以 interaction 为单位的训练样本采样方法
     Args:
         pos_user_array: users in train interactions
         pos_item_array: items in train interactions
@@ -137,7 +127,7 @@ def negative_sampling(pos_user_array, pos_item_array, neg, warm_item):
     target_pos = np.ones_like(item_pos)
     target_neg = np.zeros_like(item_neg)
     target_array = np.concatenate([target_pos, target_neg], axis=0)
-    random_idx = np.random.permutation(user_array.shape[0])  # 生成一个打乱的 range 序列作为下标
+    random_idx = np.random.permutation(user_array.shape[0])
     return user_array[random_idx], item_array[random_idx], target_array[random_idx]
 
 

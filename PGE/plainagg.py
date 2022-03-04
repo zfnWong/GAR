@@ -41,7 +41,7 @@ args, _ = parser.parse_known_args()
 
 args.samp_size = eval(args.samp_size)
 args.sep_samp = args.samp_size
-# 累加 [0, 1, 25, 25] = [0, 1, 26, 51]
+#  [0, 1, 25, 25] = [0, 1, 26, 51]
 args.samp_pos = np.cumsum([0, 1] + args.samp_size)
 
 
@@ -55,15 +55,15 @@ def compute_adj_element(l):
     adj_map = num_nodes + np.zeros((l[1] - l[0], args.max_nei), dtype=np.int)  # (batch, max_nei) ele=mask
     sub_adj = RAW_ADJ[l[0]: l[1]]
     for v in range(l[0], l[1]):
-        neighbors = np.nonzero(sub_adj[v - l[0], :])[1]  # neighbor index
+        neighbors = np.nonzero(sub_adj[v - l[0], :])[1]
         len_neighbors = len(neighbors)
-        if len_neighbors > args.max_nei:  # 如果邻居数目超过上限
-            if args.sorted:  # 排序截断
+        if len_neighbors > args.max_nei:
+            if args.sorted:
                 P = NVS[v]
                 Q = NVS[neighbors]
                 weight_sort = np.argsort(-np.sum(P * Q, axis=-1))
                 neighbors = neighbors[weight_sort[:args.max_nei]]
-            else:  # 随机截断
+            else:
                 neighbors = np.random.choice(neighbors, args.max_nei, replace=False)
             adj_map[v - l[0]] = neighbors
         else:
@@ -72,9 +72,6 @@ def compute_adj_element(l):
 
 
 def compute_adjlist_parallel(batch=50):
-    """
-    将所有节点的邻居编号截断存储在邻居表内，不足的用掩码填充，掩码为 num_node
-    """
     index_list = [[ind, min(ind + batch, num_nodes)] for ind in range(0, num_nodes, batch)]
     with Pool(args.n_jobs) as pool:
         adj_list = pool.map(compute_adj_element, index_list)
@@ -88,21 +85,17 @@ def get_traj_child(parent, sample_num=0):
     If sample_num == 0 return all the trajectory, else return truncated list
     """
     traj_list = []
-    # 获取所有 [1 hop nei, 2 hop nei] 组合，组成 trajectory set
-    for p in parent:  # 遍历一阶邻居
-        neigh = np.unique(ADJ_TAB[p].reshape([-1]))  # 获取二阶邻居，包括掩码，去重
-        # if len(neigh) > 1:  # 抹去掩码
+    for p in parent:
+        neigh = np.unique(ADJ_TAB[p].reshape([-1]))
+        # if len(neigh) > 1:
         #     neigh = neigh[neigh != num_nodes]
         neigh = np.random.choice(neigh, min(args.max_nei, len(neigh)), replace=False)
         t_array = np.hstack([p * np.ones((len(neigh), 1)).astype(np.int), neigh.reshape([-1, 1])])
         traj_list.append(t_array)
-    # 去重（没有必要）
     # traj_array = np.unique(np.vstack(traj_list), axis=0)
     traj_array = np.vstack(traj_list)
-    # 防止根节点没有一阶邻居
     if traj_array.shape[0] > 1:
         traj_array = traj_array[traj_array[:, -1] != num_nodes]
-    # 如果对于 trajectory 数量有限制，则截断
     if sample_num:
         traj_array = traj_array[
             np.random.choice(
@@ -116,25 +109,21 @@ def get_gun_traj(idx):
     return: [root node, trajectory list]
     """
     traj_list = [np.array(idx), []]
-    whole_trajs = np.unique(ADJ_TAB[idx])  # 获取所有邻居，保留了掩码
-    whole_trajs = get_traj_child(whole_trajs, 0)  # 获取所有 1-2 阶轨迹
+    whole_trajs = np.unique(ADJ_TAB[idx])
+    whole_trajs = get_traj_child(whole_trajs, 0)
     traj_list[1] = whole_trajs
     return traj_list
 
 
 def sepdot_samp_traj(idx):
-    """
-    计算 root node 的轨迹，然后按 dot 得分取前 k 个邻居的 mean-pool embedding，得到三层 embedding
-    """
     traj = get_gun_traj(idx)
     n_samp1 = args.sep_samp[0]
     n_samp2 = args.sep_samp[1]
     cen_node = traj[0]
     traj_list = traj[1]
-    traj_vec = np.array([cen_node])  # 存储三层 emb
+    traj_vec = np.array([cen_node])
 
     # Blank Graph
-    # 如果没有一阶邻居，返回的三层向量都是 root node emb
     if np.sum(traj_list[:, -1] != num_nodes) == 0:
         traj_vec = np.hstack([
             traj_vec,
@@ -146,29 +135,25 @@ def sepdot_samp_traj(idx):
 
     # Sample of First-ord neis
     traj_list = traj_list[traj_list[:, -1] != num_nodes]
-    idxes = np.unique(traj_list[:, 0].reshape([-1]))  # trajectory list 中的一阶邻居
-    # 如果有一阶邻居，则去掉自旋？应该是去掉掩码吧
+    idxes = np.unique(traj_list[:, 0].reshape([-1]))
     if len(idxes) > 1:
         # idxes = idxes[idxes != cen_node]
         idxes = idxes[idxes != num_nodes]
-    # 如果一阶邻居个数超过临界点，按dot值排序截断
     if len(idxes) > n_samp1:
         P = NVS[cen_node]
         Q = NVS[idxes]
         traj_sim = np.sum(P * Q, axis=1)
-        traj_rank = np.argsort(traj_sim)  # 升序排序
+        traj_rank = np.argsort(traj_sim)
         idxes1 = idxes[traj_rank[-n_samp1:]]
-    else:  # 如果一阶邻居个数没有超过临界点，随机采样补足
+    else:
         extra_idxes = np.random.choice(idxes, n_samp1 - len(idxes))
         idxes1 = np.hstack([idxes, extra_idxes])
     traj_vec = np.hstack([traj_vec, idxes1])
 
     # Sample of second-ord neis
     idxes = np.unique(traj_list[:, -1].reshape([-1]))
-    # 如果有二阶邻居，就去掉自身作为二阶邻居
     if len(idxes) > 1:
         idxes = idxes[idxes != cen_node]
-    # 同一阶邻居做法
     if len(idxes) > n_samp2:
         P = NVS[cen_node]
         Q = NVS[idxes]

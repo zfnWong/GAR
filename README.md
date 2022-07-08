@@ -1,4 +1,4 @@
-# GAR
+# GAR - Generative Adversarial Framework for Cold-Start Item Recommendation
 ![GAR Framework](framework.svg)
 
 # Usage

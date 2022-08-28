@@ -119,6 +119,11 @@ class GARMLP(object):
                                                self.d_training, True, True)
         self.user_rating = tf.reshape(self.user_rating, [tf.shape(self.opp_emb)[0], -1])
 
+        # rank user rating
+        self.rat = tf.placeholder(tf.float32, [None, None], name='user_rat')
+        self.k = tf.placeholder(tf.int32, name='atK')
+        _, self.top_item_index = tf.nn.top_k(self.rat, k=self.k)
+
         self.sess.run(tf.global_variables_initializer())
 
     def train_d(self, batch_uemb, batch_iemb, batch_neg_iemb, batch_content):
@@ -150,3 +155,9 @@ class GARMLP(object):
                                             self.g_training: False,
                                             })
         return user_rat
+
+    def get_ranked_rating(self, ratings, k):
+        ranked_rat = self.sess.run(self.top_item_index,
+                                   feed_dict={self.rat: ratings,
+                                              self.k: k})
+        return ranked_rat

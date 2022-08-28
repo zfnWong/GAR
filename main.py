@@ -14,8 +14,8 @@ import pandas as pd
 from pprint import pprint
 import random
 import scipy.sparse as sp
-from gar_mlp import GARMLP
-from gar_gnn import GARGNN
+from GAR.gar_mlp import GARMLP
+from GAR.gar_gnn import GARGNN
 
 
 def set_seed_tf(seed):
@@ -28,11 +28,11 @@ def set_seed_tf(seed):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', type=str, default="CiteULike", help='Dataset to use.')
-parser.add_argument('--datadir', type=str, default="../data/", help='Director of the dataset.')
+parser.add_argument('--datadir', type=str, default="data/", help='Director of the dataset.')
 parser.add_argument('--user_samp', type=str, default='sepdot', help='Sampling method for user.')
 parser.add_argument('--item_samp', type=str, default='sepdot', help='Sampling method for item.')
 parser.add_argument('--samp_size', type=str, default='[25,25]', help='Sampling size.')
-parser.add_argument('--embed_meth', type=str, default='bprmf', help='Emebdding method')
+parser.add_argument('--embed_meth', type=str, default='node2vec', help='Emebdding method')
 parser.add_argument('--batch_size', type=int, default=1024, help='Normal batch size.')
 parser.add_argument('--out_start', type=int, default=0, help='Validation per training batch.')
 parser.add_argument('--Ks', nargs='?', default='[20,50,100]', help='Output sizes of every layer')

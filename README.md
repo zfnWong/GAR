@@ -3,18 +3,18 @@
 
 # Usage
 1. Prepare the tensorflow-1.15 environment. 
-2. Go to the `PGE` package and use 
-`python3 plainagg.py --dataset CiteULike --emb node2vec` 
-to construct *PGE* for your dataset.
+2. Run GAR: 
+   - Go to the project directory and run *GAR-MLP* through
+   
+      ```python3 main.py --gpu_id 0 --dataset CiteULike --embed_meth node2vec --agg_meth none --gan_model garmlp --real_lys [200,200] --real_act tanh --sim_coe 0.1 --alpha 0.9```
+      
+      ```python3 main.py --gpu_id 0 --dataset XING --embed_meth node2vec --agg_meth none --gan_model garmlp --real_lys [200,200] --real_act tanh --sim_coe 0.1 --alpha 0.9```
 
-3. Go to the `GCGAN` package and run *GAR-GNN* and *GAR-MLP*
-   - GAR-GNN:
+   - For *GAR-GNN*, firstly go to the `PGE` directory and use `python3 plainagg.py --dataset name_of_dataset --emb node2vec` to construct the graph embeddings. Then go back to the project directory and run *GAR-GNN* through
    
       ```python3 main.py --gpu_id 0 --dataset CiteULike --embed_meth node2vec --gan_model gargnn --sim_coe 0.05 --alpha 0.9```
-
-   - GAR-MLP:
-   
-      ```python3 main.py --gpu_id 0 --dataset CiteULike --embed_meth node2vec --agg_meth none --gan_model garmlp --real_lys [200,200] --real_act tanh --sim_coe 0.1```
+      
+      ```python3 main.py --gpu_id 0 --dataset XING --embed_meth node2vec --gan_model gargnn --sim_coe 0.1 --alpha 0.9```
 
 # Cite 
 ```

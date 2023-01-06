@@ -1,22 +1,33 @@
 # GAR - Generative Adversarial Framework for Cold-Start Item Recommendation
-![GAR Framework](framework.svg)
+![GAR Framework](figure/framework.svg)
 
-# Usage
-1. Prepare the tensorflow-1.15 environment. 
-2. Run GAR: 
-   - Go to the project directory and run *GAR-MLP* through
+## Usage
+
+1. Prepare `tensorflow-1.15` environment. 
+
+2. Go to the root directory and run **GAR** through
    
-      ```python3 main.py --gpu_id 0 --dataset CiteULike --embed_meth node2vec --agg_meth none --gan_model garmlp --real_lys [200,200] --real_act tanh --sim_coe 0.1 --alpha 0.9```
+      ```
+     python main.py --dataset CiteULike --model gar --alpha 0.05 --beta 0.5
+      ```
       
-      ```python3 main.py --gpu_id 0 --dataset XING --embed_meth node2vec --agg_meth none --gan_model garmlp --real_lys [200,200] --real_act tanh --sim_coe 0.1 --alpha 0.9```
+## Experiments
 
-   - For *GAR-GNN*, firstly go to the `PGE` directory and use `python3 plainagg.py --dataset name_of_dataset --emb node2vec` to construct the graph embeddings. Then go back to the project directory and run *GAR-GNN* through
-   
-      ```python3 main.py --gpu_id 0 --dataset CiteULike --embed_meth node2vec --gan_model gargnn --sim_coe 0.05 --alpha 0.9```
-      
-      ```python3 main.py --gpu_id 0 --dataset XING --embed_meth node2vec --gan_model gargnn --sim_coe 0.1 --alpha 0.9```
+1. **Experiment setup**. We first split the items in the raw data into warm items and cold items with the ratio 8:2. The warm items make up the warm set with the related historical interactions. And so does the cold items. The warm set is further split into four subsets for embedding model training, cold-start model training, warm (recommendation performance) validation and testing with the ratio 65:15:10:10. The cold set is further split into two subsets for cold validation and testing with the ratio 1:1.
+The statistics of *CiteULike* and *XING* are provided below.
 
-# Cite 
+    ![data](figure/data.png)
+
+
+2. **Experimental results**. As shown in the paper, the recommendation performance of our model and the baselines is shown as follows.
+
+    ![results](figure/experiment.png)
+
+3. **Additional experiment**. We also evaluate the models in another setting where the warm set mentioned above is split into three subsets for embedding/cold-start model training, warm validation and testing with the ratio 8:1:1. That is to say, the embeddings model and the cold-start model are trained with the same data. This setting is widely used in both research and industry. To validate the generality of our model, we add this part of experiment results here. 
+    
+    ![results](figure/add_experiment.png)
+
+## Citation 
 ```
 @inproceedings{10.1145/3477495.3531897,
 	author = {Chen, Hao and Wang, Zefan and Huang, Feiran and Huang, Xiao and Xu, Yue and Lin, Yishi and He, Peng and Li, Zhoujun},

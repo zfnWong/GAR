@@ -8,7 +8,7 @@
 2. Go to the root directory and run **GAR** through
    
       ```
-     python main.py --dataset CiteULike --model gar --alpha 0.05 --beta 0.5
+     python main.py --dataset CiteULike --model gar
       ```
       
 ## Experiments
@@ -17,7 +17,6 @@
 The statistics of *CiteULike* and *XING* are provided below.
 
     ![data](figure/data.png)
-
 
 2. **Experimental results**. As shown in the paper, the recommendation performance of our model and the baselines is shown as follows.
 

@@ -22,7 +22,7 @@ The statistics of *CiteULike* and *XING* are provided below.
 
     ![results](figure/experiment.png)
 
-3. **Additional experiment**. We also evaluate the models in another setting where the warm set mentioned above is split into three subsets for embedding model/cold-start model training, validation and testing with the ratio 8:1:1. That is to say, the embeddings model and the cold-start model are trained with the same data. This setting is widely used in both research and industry. To validate the generality of our model, we add this part of experiment results here. 
+3. **Additional experiment**. We also evaluate the models in another setting where the warm set mentioned above is split into three subsets for embedding model/cold-start model training, validation and testing with the ratio 8:1:1. That is to say, the embeddings model and the cold-start model are trained with the same data. This setting is widely used in both research and industry. To validate the generality of our model, we add this part of experiment results here. We recommend this setting to evaluate your cold-start model.
     
     ![results](figure/add_experiment.png)
 

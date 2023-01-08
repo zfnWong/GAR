@@ -160,7 +160,6 @@ class GAR(object):
         out_emb = np.copy(item_emb)
         out_emb[cold_item] = self.sess.run(self.gen_emb, feed_dict={self.content: content[cold_item],
                                                                     self.g_training: False})
-        # First get the generated emb from content, then obtain the "generated warm item emb".
         out_emb = self.sess.run(self.warm_item_emb, feed_dict={self.item_ori_emb: out_emb})
         return out_emb
 

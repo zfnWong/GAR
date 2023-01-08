@@ -3,7 +3,7 @@ import numpy as np
 
 def init(args):
     global Ks, TEST_BATCH_SIZE, LOG_ARANGE, max_K, DEVICE
-    print('ndcg init for %s' % args.dataset)
+    print('Init for %s' % args.dataset)
     TEST_BATCH_SIZE = args.test_batch_us
     Ks = args.Ks
     max_K = max(Ks)

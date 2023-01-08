@@ -16,7 +16,7 @@
 1. **Experiment setup**. We first split the items in the raw data into warm items and cold items with the ratio 8:2. The warm items make up the warm set with the related historical interactions. And so does the cold items. The warm set is further split into four subsets for embedding model training, cold-start model training, validation (of warm recommendation performance) and testing with the ratio 65%:15%:10%:10%. The cold set is further split into two subsets for validation (of warm recommendation performance) and testing with the ratio 1:1.
 The statistics of *CiteULike* and *XING* are provided below.
 
-    ![data](figure/data.png)
+    ![data](figure/statistics.png)
 
 2. **Experimental results**. As shown in the paper, the recommendation performance of our model and the baselines is shown as follows.
 

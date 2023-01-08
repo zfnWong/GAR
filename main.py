@@ -36,7 +36,7 @@ parser.add_argument('--patience', type=int, default=10, help='Early stop patienc
 
 # cold-start model parameter
 parser.add_argument('--model', type=str, default='gar')
-parser.add_argument('--alpha', type=float, default=0.05, help='share param')
+parser.add_argument('--alpha', type=float, default=0.05, help='param in GAR')
 parser.add_argument('--beta', type=float, default=0.1, help='param in GAR')
 args, _ = parser.parse_known_args()
 

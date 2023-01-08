@@ -47,7 +47,6 @@ def bpr_neg_samp(uni_users, n_users, support_dict, item_array):
         n_users - sample n users
         neg_num - n of sample pairs for a user.
         item_array - sample item in this array.
-
     return:
         ret_array - [uid pos_iid neg_iid] * n_records
     """

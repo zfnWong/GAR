@@ -27,7 +27,7 @@ parser.add_argument('--Ks', nargs='?', default='[20]', help='Output sizes of eve
 parser.add_argument('--n_test_user', type=int, default=2000)
 
 # cold-start model training
-parser.add_argument('--embed_meth', type=str, default='node2vec', help='Emebdding method')
+parser.add_argument('--embed_meth', type=str, default='ncf', help='recommender')
 parser.add_argument('--batch_size', type=int, default=1024, help='Normal batch size.')
 parser.add_argument('--train_set', type=str, default='map', choices=['map', 'emb'])
 parser.add_argument('--max_epoch', type=int, default=1000)

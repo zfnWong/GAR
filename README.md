@@ -1,11 +1,15 @@
 # GAR - Generative Adversarial Framework for Cold-Start Item Recommendation
+This is our Tensorflow implementation of GAR: 
+
+>Hao Chen, Zefan Wang, Feiran Huang, Xiao Huang, Yue Xu, Yishi Lin, Peng He, and Zhoujun Li. 2022. [Generative Adversarial Framework for Cold-Start Item Recommendation](https://dl.acm.org/doi/abs/10.1145/3477495.3531897). In SIGIR '22.
+
 ![GAR Framework](figure/framework.svg)
 
 ## Usage
 
 1. Prepare `tensorflow-1.15` environment. 
 
-2. Go to the root directory and run **GAR** through
+2. Go to the project directory and run **GAR** through
    
       ```
      python main.py --dataset CiteULike --model gar
@@ -30,21 +34,12 @@
     ![results](figure/add_experiment.png) 
 
 ## Citation 
+If you use this repo in your work, please cite the paper:
 ```
 @inproceedings{10.1145/3477495.3531897,
-	author = {Chen, Hao and Wang, Zefan and Huang, Feiran and Huang, Xiao and Xu, Yue and Lin, Yishi and He, Peng and Li, Zhoujun},
 	title = {Generative Adversarial Framework for Cold-Start Item Recommendation},
+	author = {Chen, Hao and Wang, Zefan and Huang, Feiran and Huang, Xiao and Xu, Yue and Lin, Yishi and He, Peng and Li, Zhoujun},
 	year = {2022},
-	isbn = {9781450387323},
-	publisher = {Association for Computing Machinery},
-	address = {New York, NY, USA},
-	url = {https://doi.org/10.1145/3477495.3531897},
-	doi = {10.1145/3477495.3531897},
 	booktitle = {Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval},
-	pages = {2565–2571},
-	numpages = {7},
-	keywords = {adversarial framework, cold-start recommendation, recommender system},
-	location = {Madrid, Spain},
-	series = {SIGIR '22}
 }
 ```

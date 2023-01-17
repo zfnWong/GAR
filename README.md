@@ -1,7 +1,7 @@
 # GAR - Generative Adversarial Framework for Cold-Start Item Recommendation
 This is our Tensorflow implementation of GAR: 
 
->Hao Chen, Zefan Wang, Feiran Huang, Xiao Huang, Yue Xu, Yishi Lin, Peng He, and Zhoujun Li. 2022. [Generative Adversarial Framework for Cold-Start Item Recommendation](https://dl.acm.org/doi/abs/10.1145/3477495.3531897). In SIGIR '22.
+>Hao Chen, Zefan Wang, Feiran Huang, Xiao Huang, Yue Xu, Yishi Lin, Peng He, and Zhoujun Li. 2022. [Generative Adversarial Framework for Cold-Start Item Recommendation](https://dl.acm.org/doi/abs/10.1145/3477495.3531897). In SIGIR.
 
 ![GAR Framework](figure/framework.svg)
 
